@@ -60,12 +60,14 @@ namespace KTClient.Logic
             this.stringRepresentation = stringRepresentation;
         }
 
+        // append string representation of data object by another string
         public void appendStringRepresentation(string appendedString)
         {
             this.stringRepresentation += appendedString;
             this.buffer = this.getEncodedBytes(this.stringRepresentation);
         }
 
+        // append string representation of data object by array of byte
         public void appendStringRepresentation(byte[] appendedBuffer)
         {
             this.stringRepresentation += this.getEncodedString(appendedBuffer);
@@ -118,7 +120,8 @@ namespace KTClient.Logic
             }
             return str;
         }
-
+        
+        // clear data in object
         public void clear()
         {
             this.setStringRepresentation("");

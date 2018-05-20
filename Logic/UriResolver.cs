@@ -23,11 +23,13 @@ namespace KTClient.Logic
             this.setUri(stringUri);
         }
 
+        // get an array of IP addresses from uri hostname property
         public IPAddress[] getIPAddresses()
         {
             if (this.uri != null)
             {
                 IPAddress[] iPAddresses;
+                // handle uri by its type
                 if (this.uri.HostNameType == UriHostNameType.Dns)
                 {
                     try
@@ -51,6 +53,7 @@ namespace KTClient.Logic
             }
         } 
 
+        // preset the entered uri
         private string preprocessUri(string preUri)
         {
             if (!preUri.StartsWith("http://"))

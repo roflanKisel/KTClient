@@ -8,7 +8,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MahApps.Metro;
-using System.Threading;
 
 namespace KTClient
 {
@@ -16,6 +15,7 @@ namespace KTClient
     {
         private Dictionary<string, string> body;
 
+        // init variables in constructor
         public MainWindow()
         {
             InitializeComponent();
@@ -29,21 +29,27 @@ namespace KTClient
             this.sendInfo();
         }
 
+        // sending info to server and handling response
         private void sendInfo()
         {
+            // hanle URI
             string stringUri = this.pathTextBox.Text;
             UriResolver uriResolver = new UriResolver(stringUri);
             Uri uri = uriResolver.getUri();
-
+            // checking URI
             if (uri != null && uriResolver.getIPAddresses() != null)
             {
                 string requestString = formRequestString(uri);
                 this.showHeaders(uri);
                 try
                 {
+                    // send data to server
                     string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
+                    // pick body from response
                     this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
+                    // pick headers from response
                     this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
+                    // write response body to file
                     File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", MessageParser.getBodyFromMessage(response));
                 }
                 catch (SocketException exception)
@@ -64,6 +70,7 @@ namespace KTClient
             this.headersLabel.Content = headers.Substring(headers.IndexOf("\r\n") + 2);
         }
 
+        // form request
         private string formRequestString(Uri uri)
         {
             string body = formBody();
@@ -71,6 +78,7 @@ namespace KTClient
             return headers + body + "\r\n\r\n";
         }
 
+        // create headers for request
         private string formHeaders(Uri uri, int contentLength)
         {
             string headers = string.Empty;
@@ -83,6 +91,7 @@ namespace KTClient
             return headers;
         }
 
+        // create body for request
         private string formBody()
         {
             if (this.requestMethodBox.SelectionBoxItem.ToString() == "GET")
@@ -100,6 +109,7 @@ namespace KTClient
             return body;
         }
 
+        // open request code
         private void viewCodeButton_Click(object sender, RoutedEventArgs e)
         {
             string stringUri = this.pathTextBox.Text;
@@ -117,13 +127,16 @@ namespace KTClient
             }
         }
 
+        // open created file in browser
         private void webViewButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/Resources/Web/temp-page.html");
         }
 
+        // add button handler
         private void addBodyVariableButton_Click(object sender, RoutedEventArgs e)
         {
+            // remove spaces
             String variable = this.variableCreatorBox.Text.Trim();
             String value = this.valueCreatorBox.Text.Trim();
             try
@@ -150,6 +163,7 @@ namespace KTClient
             }
         }
 
+        // edit button handler
         private void editBodyVariableButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -178,12 +192,14 @@ namespace KTClient
             }
         }
 
+        // delete variable
         private void deleteBodyVariableButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.bodyVariableCombobox.SelectedIndex != -1)
                 {
+                    // find by selected index
                     object value = this.bodyVariableCombobox.Items.GetItemAt(this.bodyVariableCombobox.SelectedIndex);
                     this.bodyVariableCombobox.Items.Remove(value);
                     this.bodyVariableCombobox.Items.Refresh();
@@ -202,6 +218,7 @@ namespace KTClient
             }
         }
 
+        // variable change listener
         private void bodyVariableCombobox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             try
@@ -226,6 +243,7 @@ namespace KTClient
             this.settingsFlyout.IsOpen = !this.settingsFlyout.IsOpen;
         }
 
+        // toggle theme
         private void ToggleSwitch_IsCheckedChanged(object sender, EventArgs e)
         {
             if (this.themeSwitcher.IsChecked.Value)
@@ -241,6 +259,7 @@ namespace KTClient
             }
         }
 
+        // enter listening on url line
         private void pathTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)

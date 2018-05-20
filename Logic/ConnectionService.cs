@@ -2,11 +2,6 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System;
-using MahApps.Metro.Controls;
-using System.Windows;
-using System.Windows.Threading;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace KTClient.Logic
 {
