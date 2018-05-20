@@ -8,6 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MahApps.Metro;
+using System.Threading;
 
 namespace KTClient
 {
@@ -43,7 +44,7 @@ namespace KTClient
                     string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
                     this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
                     this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
-                    File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", response);
+                    File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", MessageParser.getBodyFromMessage(response));
                 }
                 catch (SocketException exception)
                 {

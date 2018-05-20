@@ -118,5 +118,10 @@ namespace KTClient.Logic
             }
             return str;
         }
+
+        public void clear()
+        {
+            this.setStringRepresentation("");
+        }
     }
 }

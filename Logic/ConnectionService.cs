@@ -2,6 +2,11 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System;
+using MahApps.Metro.Controls;
+using System.Windows;
+using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace KTClient.Logic
 {
@@ -41,19 +46,60 @@ namespace KTClient.Logic
         {
             // header is received, parsing content length
             // regular expression
-            Regex regex = new Regex("\\\r\nContent-Length: (.*?)\\\r\n");
-            Match match = regex.Match(response.getStringRepresentation());
+            Regex contentLengthRegex = new Regex("\\\r\nContent-Length: (.*?)\\\r\n");
+            Match contentLengthMatch = contentLengthRegex.Match(response.getStringRepresentation());
 
-            if (match.Success)
+            Regex transferEncodingChunkedRegex = new Regex("\\\r\nTransfer-Encoding: chunked\\\r\n");
+            Match transferEncodingChunkedMatch = transferEncodingChunkedRegex.Match(response.getStringRepresentation());
+
+            if (contentLengthMatch.Success)
             {
-                int contentLength = int.Parse(match.Groups[1].ToString()); // get content length using regex
-                byte[] bodyBuff;
+                int contentLength = int.Parse(contentLengthMatch.Groups[1].ToString()); // get content length using regex
+                byte[] bodyBuff;             
+                
+                int receivedLength = 0;
                 // read the body
                 for (int i = 0; i < contentLength; i++)
                 {
                     bodyBuff = new byte[1];
-                    socket.Receive(bodyBuff, 0, 1, 0);
+                    receivedLength = socket.Receive(bodyBuff, 0, 1, 0);
                     response.appendStringRepresentation(bodyBuff);
+                }
+            } else if (transferEncodingChunkedMatch.Success)
+            {
+                byte[] bodyBuff;
+                byte[] lengthBuff;
+                DataObject currentLength = new DataObject();
+                // while there are available bytes of data to receive
+                while (socket.Available > 0)
+                {
+                    // receiving length of chunk
+                    lengthBuff = new byte[1];
+                    socket.Receive(lengthBuff, 0, 1, 0);
+                    currentLength.appendStringRepresentation(lengthBuff);
+                    // if length of chunk is known
+                    if (currentLength.getStringRepresentation().Contains("\r\n"))
+                    {
+                        // format length of chunk from hexadecimal to decimal
+                        string hexNumberFormat = currentLength.getStringRepresentation().Substring(
+                            0, currentLength.getStringRepresentation().IndexOf("\r\n"));
+                        int length = Convert.ToInt32(hexNumberFormat, 16);
+                        // end of body
+                        if (length == 0)
+                        {
+                            break;
+                        }
+                        int receivedLength = 0;
+                        // receiving chunk
+                        for (int i = 0; i < length + 2; i++)
+                        {
+                            bodyBuff = new byte[1];
+                            receivedLength += socket.Receive(bodyBuff, 0, 1, 0);
+                            response.appendStringRepresentation(bodyBuff);
+                        }
+                        // clear length of next chunk
+                        currentLength.clear();
+                    }
                 }
             }
         }
