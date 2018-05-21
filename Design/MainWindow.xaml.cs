@@ -75,7 +75,7 @@ namespace KTClient
         {
             string body = formBody();
             string headers = formHeaders(uri, body.Length) + "\r\n";
-            return headers + body + "\r\n\r\n";
+            return headers + body;
         }
 
         // create headers for request
