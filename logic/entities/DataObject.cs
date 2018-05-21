@@ -5,6 +5,7 @@ namespace KTClient.Logic
     class DataObject
     {
         private const int DEFAULT_BUFFER_SIZE = 1024;
+        private const EncodingMethod DEFAULT_ENCODING_METHOD = EncodingMethod.ASCII;
 
         private byte[] buffer;
         private string stringRepresentation;
@@ -14,28 +15,28 @@ namespace KTClient.Logic
         {
             buffer = new byte[DEFAULT_BUFFER_SIZE];
             stringRepresentation = string.Empty;
-            encodingMethod = EncodingMethod.UTF8;
+            encodingMethod = DEFAULT_ENCODING_METHOD;
         }
 
         public DataObject(int bufferSize)
         {
             buffer = new byte[bufferSize];
             stringRepresentation = string.Empty;
-            encodingMethod = EncodingMethod.UTF8;
+            encodingMethod = DEFAULT_ENCODING_METHOD;
         }
 
         public DataObject(byte[] buffer)
         {
             this.buffer = buffer;
             this.stringRepresentation = this.getEncodedString(buffer);
-            encodingMethod = EncodingMethod.UTF8;
+            encodingMethod = DEFAULT_ENCODING_METHOD;
         }
 
         public DataObject(string stringRepresentation)
         {
             this.buffer = this.getEncodedBytes(stringRepresentation);
             this.stringRepresentation = stringRepresentation;
-            encodingMethod = EncodingMethod.UTF8;
+            encodingMethod = DEFAULT_ENCODING_METHOD;
         }
 
         public byte[] getBuffer()

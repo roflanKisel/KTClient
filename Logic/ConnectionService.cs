@@ -50,8 +50,8 @@ namespace KTClient.Logic
             if (contentLengthMatch.Success)
             {
                 int contentLength = int.Parse(contentLengthMatch.Groups[1].ToString()); // get content length using regex
-                byte[] bodyBuff;             
-                
+                byte[] bodyBuff;
+                Console.WriteLine("Content-Length: " + contentLength);
                 int receivedLength = 0;
                 // read the body
                 for (int i = 0; i < contentLength; i++)

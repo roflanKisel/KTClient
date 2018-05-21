@@ -63,7 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Design\MainWindow.xaml">
+    <Page Include="design\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -71,12 +71,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Logic\ConnectionService.cs" />
-    <Compile Include="Logic\DataObject.cs" />
-    <Compile Include="Logic\EncodingMethod.cs" />
-    <Compile Include="Logic\MessageParser.cs" />
-    <Compile Include="Logic\UriResolver.cs" />
-    <Compile Include="Design\MainWindow.xaml.cs">
+    <Compile Include="logic\ConnectionService.cs" />
+    <Compile Include="logic\entities\DataObject.cs" />
+    <Compile Include="logic\EncodingMethod.cs" />
+    <Compile Include="logic\entities\HttpHeaders.cs" />
+    <Compile Include="logic\MessageParser.cs" />
+    <Compile Include="logic\UriResolver.cs" />
+    <Compile Include="design\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -109,7 +110,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Web\temp-page.html" />
+    <Content Include="resources\web\temp-page.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

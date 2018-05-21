@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using MahApps.Metro;
 using System.Threading.Tasks;
+using KTClient.logic.entities;
 
 namespace KTClient
 {
@@ -56,15 +57,15 @@ namespace KTClient
                             // pick headers from response
                             this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
                             // write response body to file
-                            File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", MessageParser.getBodyFromMessage(response));
+                            File.WriteAllText("..\\..\\resources\\web\\temp-page.html", MessageParser.getBodyFromMessage(response));
                         });
                     });
                    
                 }
-                catch (SocketException exception)
+                catch (SocketException)
                 {
 
-                    this.ShowMessageAsync("Error", exception.ToString());
+                    this.ShowMessageAsync("Error", "Socket exception");
                 }
             }
             else
@@ -92,18 +93,18 @@ namespace KTClient
         {
             string headers = string.Empty;
             string requestMethod = this.requestMethodBox.SelectionBoxItem.ToString();
-            headers += requestMethod + " " + uri.PathAndQuery + " HTTP/1.1\r\n";
-            headers += "Host: " + uri.Host + "\r\n";
-            headers += "User-Agent: KTClient\r\n";
-            headers += "Content-Length: " + contentLength + "\r\n";
-            headers += "Connection: keep-alive\r\n";
+            headers += requestMethod + " " + uri.PathAndQuery + " " + HttpHeaders.DefaultHttpVersion + "\r\n";
+            headers += HttpHeaders.Host + ": " + uri.Host + "\r\n";
+            headers += HttpHeaders.UserAgent + ": " + HttpHeaders.DefaultUserAgent + "\r\n";
+            headers += HttpHeaders.ContentLength + ": " + contentLength + "\r\n";
+            headers += HttpHeaders.Connection + ": " + HttpHeaders.DefaultConnection + "\r\n";
             return headers;
         }
 
         // create body for request
         private string formBody()
         {
-            if (this.requestMethodBox.SelectionBoxItem.ToString() == "GET")
+            if (this.requestMethodBox.SelectionBoxItem.ToString() == HttpMethods.GET)
             {
                 return "";
             }
@@ -139,7 +140,7 @@ namespace KTClient
         // open created file in browser
         private void webViewButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/Resources/Web/temp-page.html");
+            Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/web/temp-page.html");
         }
 
         // add button handler
