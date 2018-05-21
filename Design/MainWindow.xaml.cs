@@ -95,7 +95,7 @@ namespace KTClient
             headers += requestMethod + " " + uri.PathAndQuery + " HTTP/1.1\r\n";
             headers += "Host: " + uri.Host + "\r\n";
             headers += "User-Agent: KTClient\r\n";
-            headers += "Content-length: " + contentLength + "\r\n";
+            headers += "Content-Length: " + contentLength + "\r\n";
             headers += "Connection: keep-alive\r\n";
             return headers;
         }
