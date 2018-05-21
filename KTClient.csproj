@@ -75,6 +75,8 @@
     <Compile Include="logic\entities\DataObject.cs" />
     <Compile Include="logic\EncodingMethod.cs" />
     <Compile Include="logic\entities\HttpHeaders.cs" />
+    <Compile Include="logic\entities\HttpMethods.cs" />
+    <Compile Include="logic\entities\MIMEType.cs" />
     <Compile Include="logic\MessageParser.cs" />
     <Compile Include="logic\UriResolver.cs" />
     <Compile Include="design\MainWindow.xaml.cs">
@@ -110,6 +112,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="resources\images\temp-image.png" />
+    <Resource Include="resources\images\temp-image.jpeg" />
+    <Resource Include="resources\text\temp-file.txt" />
     <Content Include="resources\web\temp-page.html" />
   </ItemGroup>
   <ItemGroup />

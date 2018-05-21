@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System;
+using KTClient.logic.entities;
 
 namespace KTClient.Logic
 {
@@ -40,18 +41,16 @@ namespace KTClient.Logic
         private static void readBody(DataObject response, Socket socket)
         {
             // header is received, parsing content length
-            // regular expression
-            Regex contentLengthRegex = new Regex("\\\r\nContent-Length: (.*?)\\\r\n");
-            Match contentLengthMatch = contentLengthRegex.Match(response.getStringRepresentation());
+            string contentLengthMatch = MessageParser.getHeaderValue(response.getStringRepresentation(),
+                HttpHeaders.ContentLength);
 
-            Regex transferEncodingChunkedRegex = new Regex("\\\r\nTransfer-Encoding: chunked\\\r\n");
-            Match transferEncodingChunkedMatch = transferEncodingChunkedRegex.Match(response.getStringRepresentation());
+            string transferEncodingMatch = MessageParser.getHeaderValue(response.getStringRepresentation(), 
+                HttpHeaders.TransferEncoding);
 
-            if (contentLengthMatch.Success)
+            if (contentLengthMatch != string.Empty)
             {
-                int contentLength = int.Parse(contentLengthMatch.Groups[1].ToString()); // get content length using regex
+                int contentLength = int.Parse(contentLengthMatch);
                 byte[] bodyBuff;
-                Console.WriteLine("Content-Length: " + contentLength);
                 int receivedLength = 0;
                 // read the body
                 for (int i = 0; i < contentLength; i++)
@@ -60,7 +59,7 @@ namespace KTClient.Logic
                     receivedLength = socket.Receive(bodyBuff, 0, 1, 0);
                     response.appendStringRepresentation(bodyBuff);
                 }
-            } else if (transferEncodingChunkedMatch.Success)
+            } else if (transferEncodingMatch == "chunked")
             {
                 byte[] bodyBuff;
                 byte[] lengthBuff;

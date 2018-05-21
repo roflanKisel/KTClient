@@ -8,10 +8,11 @@ namespace KTClient.logic.entities
 {
     class HttpHeaders
     {
-        public static string Host = "Host";
-        public static string UserAgent = "User-Agent";
-        public static string ContentLength = "Content-Length";
-        public static string Connection = "Connection";
+        public readonly static string Host = "Host";
+        public readonly static string UserAgent = "User-Agent";
+        public readonly static string ContentLength = "Content-Length";
+        public readonly static string Connection = "Connection";
+        public readonly static string TransferEncoding = "Transfer-Encoding";
 
         public static string DefaultHttpVersion = "HTTP/1.1";
         public static string DefaultUserAgent = "KTClient";

@@ -56,8 +56,6 @@ namespace KTClient
                             this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
                             // pick headers from response
                             this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
-                            // write response body to file
-                            File.WriteAllText("..\\..\\resources\\web\\temp-page.html", MessageParser.getBodyFromMessage(response));
                         });
                     });
                    
