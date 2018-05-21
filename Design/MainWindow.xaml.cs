@@ -8,6 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MahApps.Metro;
+using System.Threading.Tasks;
 
 namespace KTClient
 {
@@ -43,14 +44,22 @@ namespace KTClient
                 this.showHeaders(uri);
                 try
                 {
-                    // send data to server
-                    string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
-                    // pick body from response
-                    this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
-                    // pick headers from response
-                    this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
-                    // write response body to file
-                    File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", MessageParser.getBodyFromMessage(response));
+                    // create sending data thread
+                    Task.Factory.StartNew(() =>
+                    {
+                        // send data to server
+                        string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
+                        Dispatcher.Invoke(() =>
+                        {
+                            // pick body from response
+                            this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
+                            // pick headers from response
+                            this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
+                            // write response body to file
+                            File.WriteAllText("..\\..\\Resources\\Web\\temp-page.html", MessageParser.getBodyFromMessage(response));
+                        });
+                    });
+                   
                 }
                 catch (SocketException exception)
                 {

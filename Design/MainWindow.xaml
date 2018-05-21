@@ -20,6 +20,7 @@
                       HorizontalAlignment="Left" Margin="0,0,0,0">
                 <ComboBoxItem Name="getMethodItem">GET</ComboBoxItem>
                 <ComboBoxItem Name="postMethodItem">POST</ComboBoxItem>
+                <ComboBoxItem Name="headMethodItem">HEAD</ComboBoxItem>
                 <ComboBoxItem Name="putMethodItem">PUT</ComboBoxItem>
                 <ComboBoxItem Name="deleteMethodItem">DELETE</ComboBoxItem>
             </ComboBox>
