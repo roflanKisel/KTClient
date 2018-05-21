@@ -1,6 +1,7 @@
 ﻿using System.Text;
+using KTClient.logic;
 
-namespace KTClient.Logic
+namespace KTClient.logic.entities
 {
     class DataObject
     {

@@ -77,9 +77,9 @@
                                    Margin="8,5,0,0"/>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="WebView">
+                <TabItem Header="View">
                     <Button Name="webViewButton" Height="100" Width="300" 
-                            Margin="8,5,0,0" Click="webViewButton_Click">Open in browser</Button>
+                            Margin="8,5,0,0" Click="webViewButton_Click">Open in Windows</Button>
                 </TabItem>
             </Controls:MetroAnimatedTabControl>
         </Grid>

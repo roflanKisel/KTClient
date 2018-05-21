@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
 using MahApps.Metro.Controls;
-using KTClient.Logic;
+using KTClient.logic;
 using MahApps.Metro.Controls.Dialogs;
 using System.Net.Sockets;
-using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MahApps.Metro;
@@ -43,28 +42,29 @@ namespace KTClient
             {
                 string requestString = formRequestString(uri);
                 this.showHeaders(uri);
-                try
+                // create sending data thread
+                Task.Factory.StartNew(() =>
                 {
-                    // create sending data thread
-                    Task.Factory.StartNew(() =>
+                    // send data to server
+                    string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
+                    Dispatcher.Invoke(() =>
                     {
-                        // send data to server
-                        string response = ConnectionService.sendData(uri, uriResolver.getIPAddresses(), requestString);
-                        Dispatcher.Invoke(() =>
+                        if (response == "")
+                        {
+                            this.ShowMessageAsync("Error", "SocketException");
+                        }
+                        else
                         {
                             // pick body from response
                             this.responseBodyTextBlock.Text = MessageParser.getBodyFromMessage(response);
                             // pick headers from response
                             this.responseHeadersTextBlock.Text = MessageParser.getHeadersFromMessage(response);
-                        });
+                            MessageWriter.writeResponseIntoFile(
+                                MessageParser.getHeadersFromMessage(response),
+                                MessageParser.getBodyFromMessage(response));
+                        }
                     });
-                   
-                }
-                catch (SocketException)
-                {
-
-                    this.ShowMessageAsync("Error", "Socket exception");
-                }
+                });
             }
             else
             {
@@ -138,7 +138,32 @@ namespace KTClient
         // open created file in browser
         private void webViewButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/web/temp-page.html");
+            string contentType = MessageParser.getHeaderValue(this.responseHeadersTextBlock.Text, HttpHeaders.ContentType);
+            if (contentType != string.Empty)
+            {
+                switch (contentType)
+                {
+                    case "text/plain":
+                        Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/text/temp-file.txt");
+                        break;
+                    case "text/html":
+                        Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/web/temp-page.html");
+                        break;
+                    case "image/jpeg":
+                        Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/images/temp-image.jpg");
+                        break;
+                    case "image/png":
+                        Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/images/temp-image.png");
+                        break;
+                    default:
+                        Process.Start("file:///D:/Study/4_sem/KSIS/KTProject/KTClient/resources/web/temp-page.html");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error");
+            }
         }
 
         // add button handler

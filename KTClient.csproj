@@ -78,6 +78,7 @@
     <Compile Include="logic\entities\HttpMethods.cs" />
     <Compile Include="logic\entities\MIMEType.cs" />
     <Compile Include="logic\MessageParser.cs" />
+    <Compile Include="logic\MessageWriter.cs" />
     <Compile Include="logic\UriResolver.cs" />
     <Compile Include="design\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -113,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\images\temp-image.png" />
-    <Resource Include="resources\images\temp-image.jpeg" />
+    <Content Include="resources\images\temp-image.jpg" />
     <Resource Include="resources\text\temp-file.txt" />
     <Content Include="resources\web\temp-page.html" />
   </ItemGroup>

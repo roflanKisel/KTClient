@@ -13,6 +13,7 @@ namespace KTClient.logic.entities
         public readonly static string ContentLength = "Content-Length";
         public readonly static string Connection = "Connection";
         public readonly static string TransferEncoding = "Transfer-Encoding";
+        public readonly static string ContentType = "Content-Type";
 
         public static string DefaultHttpVersion = "HTTP/1.1";
         public static string DefaultUserAgent = "KTClient";

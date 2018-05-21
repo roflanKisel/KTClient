@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace KTClient.Logic
+namespace KTClient.logic
 {
     class UriResolver
     {

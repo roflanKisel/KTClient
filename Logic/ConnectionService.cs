@@ -4,38 +4,44 @@ using System.Text.RegularExpressions;
 using System;
 using KTClient.logic.entities;
 
-namespace KTClient.Logic
+namespace KTClient.logic
 {
     class ConnectionService
     {
         public static string sendData(Uri uri, IPAddress[] ipAddresses, string sendString)
         {
-            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(ipAddresses, uri.Port);
-
-            DataObject sendDataObject = new DataObject(sendString); // data that we send to server
-            DataObject receiveDataObject = new DataObject(); // data that we receive from server
-
-            socket.Send(sendDataObject.getBuffer());
-
-            bool flag = true; // just so we know we are still reading
-
-            while (flag)
+            try
             {
-                // read the header byte by byte, until \r\n\r\n
-                byte[] buffer = new byte[1];
-                socket.Receive(buffer, 0, 1, 0);
-                receiveDataObject.appendStringRepresentation(buffer);
+                Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(ipAddresses, uri.Port);
 
-                // if headers ended
-                if (receiveDataObject.getStringRepresentation().Contains("\r\n\r\n"))
+                DataObject sendDataObject = new DataObject(sendString); // data that we send to server
+                DataObject receiveDataObject = new DataObject(); // data that we receive from server
+
+                socket.Send(sendDataObject.getBuffer());
+
+                bool flag = true; // just so we know we are still reading
+
+                while (flag)
                 {
-                    readBody(receiveDataObject, socket);
-                    flag = false;
+                    // read the header byte by byte, until \r\n\r\n
+                    byte[] buffer = new byte[1];
+                    socket.Receive(buffer, 0, 1, 0);
+                    receiveDataObject.appendStringRepresentation(buffer);
+
+                    // if headers ended
+                    if (receiveDataObject.getStringRepresentation().Contains("\r\n\r\n"))
+                    {
+                        readBody(receiveDataObject, socket);
+                        flag = false;
+                    }
                 }
+                socket.Close();
+                return receiveDataObject.getStringRepresentation();
+            } catch (SocketException)
+            {
+                return "";
             }
-            socket.Close();
-            return receiveDataObject.getStringRepresentation();
         }
 
         private static void readBody(DataObject response, Socket socket)
@@ -49,6 +55,7 @@ namespace KTClient.Logic
 
             if (contentLengthMatch != string.Empty)
             {
+                Console.WriteLine(contentLengthMatch);
                 int contentLength = int.Parse(contentLengthMatch);
                 byte[] bodyBuff;
                 int receivedLength = 0;
